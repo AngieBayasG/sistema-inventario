@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h2>💰 Pagos</h2>
+        <a href="{{ url_for('pagos.nuevo') }}" class="btn btn-success">
+            ➕ Nuevo Pago
+        </a>
+    </div>
+
+    <!-- FILTRO -->
+    <form method="GET" class="row mb-3">
+
+        <div class="col-md-4">
+            <select name="cliente_id" class="form-control">
+                <option value="">-- Todos --</option>
+                {% for c in clientes %}
+                <option value="{{ c['id'] }}"
+                    {% if cliente_id == c['id']|string %}selected{% endif %}>
+                    {{ c['nombre'] }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary">Filtrar</button>
+        </div>
+
+        <div class="col-md-2">
+            <a href="{{ url_for('pagos.index') }}" class="btn btn-secondary">
+                Limpiar
+            </a>
+        </div>
+
+    </form>
+
+    <!-- TABLA -->
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Valor</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in pagos %}
+            <tr>
+                <td>{{ p["id"] }}</td>
+                <td>{{ p["nombre"] }}</td>
+                <td>${{ p["valor"] }}</td>
+                <td>{{ p["fecha"] }}</td>
+                <td>
+                    <form action="{{ url_for('pagos.anular_pago', pago_id=p['id']) }}" method="POST">
+                        <button class="btn btn-danger btn-sm"
+                        onclick="return confirm('¿Seguro que deseas anular este pago?')">
+                            ❌ Anular
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2>🛒 Nueva Venta</h2>
+
+    <!-- 🔴 MENSAJE DE ERROR -->
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" class="card p-4 shadow">
+
+        <!-- CLIENTE -->
+        <div class="mb-3">
+            <label>Cliente</label>
+            <select name="cliente_id" class="form-control" required>
+                <option value="">-- Seleccione cliente --</option>
+                {% for c in clientes %}
+                <option value="{{ c['id'] }}">{{ c['nombre'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div id="productos-container">
+
+            <div class="row mb-2 producto-item">
+                <div class="col-md-6">
+                    <select name="producto_id" class="form-control">
+                        {% for p in productos %}
+                        <option value="{{ p['id'] }}">
+                            {{ p['descripcion'] }} (Stock: {{ p['stock_actual'] }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <input type="number"
+                           name="cantidad"
+                           class="form-control"
+                           placeholder="Cantidad"
+                           required>
+                </div>
+
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger" onclick="eliminarFila(this)">X</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BOTÓN AGREGAR -->
+        <button type="button" class="btn btn-secondary mb-3" onclick="agregarProducto()">
+            ➕ Agregar Producto
+        </button>
+
+        <button class="btn btn-success">💾 Guardar Venta</button>
+
+    </form>
+
+</div>
+
+<script>
+function agregarProducto() {
+    let container = document.getElementById("productos-container");
+    let item = document.querySelector(".producto-item").cloneNode(true);
+
+    // limpiar cantidad
+    item.querySelector("input").value = "";
+
+    container.appendChild(item);
+}
+
+function eliminarFila(btn) {
+    let filas = document.querySelectorAll(".producto-item");
+
+    // evitar eliminar todas las filas
+    if (filas.length > 1) {
+        btn.closest(".producto-item").remove();
+    }
+}
+</script>
+
+{% endblock %}

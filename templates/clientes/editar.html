@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="text-warning mb-4">✏️ Editar Cliente</h2>
+
+    <form method="post" class="card p-4 shadow">
+
+        <!-- ✅ ERROR AQUÍ -->
+        {% if error %}
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <input type="text" name="nombre"
+                   value="{{ cliente['nombre'] }}"
+                   class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email"
+                   value="{{ cliente['email'] }}"
+                   class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>CI</label>
+            <input type="text" name="ci"
+                   value="{{ cliente['ci'] }}"
+                   class="form-control">
+        </div>
+
+        <button class="btn btn-warning">Actualizar</button>
+        <a href="{{ url_for('clientes.index') }}" class="btn btn-secondary">Volver</a>
+
+    </form>
+
+</div>
+
+{% endblock %}

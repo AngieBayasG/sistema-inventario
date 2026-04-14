@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- 🔴 BOTÓN PDF -->
+    <div class="mb-3 text-end">
+        <a href="/reporte/pdf" class="btn btn-danger">
+            📄 Descargar PDF
+        </a>
+    </div>
+
+    <!-- 🧠 TÍTULO -->
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark">
+            📊 Dashboard
+        </h2>
+        <p class="text-muted">Resumen general del sistema</p>
+    </div>
+
+    <!-- 📦 TARJETAS -->
+    <div class="row g-4 mb-4">
+
+        <!-- CLIENTES -->
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-primary h-100">
+                <div class="card-body text-center">
+                    <h6 class="fw-light">Clientes</h6>
+                    <h2 class="fw-bold">{{ total_clientes }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-success h-100">
+                <div class="card-body text-center">
+                    <h6 class="fw-light">Productos</h6>
+                    <h2 class="fw-bold">{{ total_productos }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- VENTAS -->
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-dark bg-warning h-100">
+                <div class="card-body text-center">
+                    <h6 class="fw-light">Ventas</h6>
+                    <h2 class="fw-bold">{{ total_ventas }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- DEUDA -->
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-white bg-danger h-100">
+                <div class="card-body text-center">
+                    <h6 class="fw-light">Deuda Total</h6>
+                    <h2 class="fw-bold">${{ deuda_total or 0 }}</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 📈 GRÁFICA -->
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white">
+            📈 Ventas por día
+        </div>
+        <div class="card-body">
+            <canvas id="graficoVentas"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- 📊 CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+fetch("/dashboard-data")
+.then(res => res.json())
+.then(data => {
+
+    const ctx = document.getElementById('graficoVentas').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.fechas,
+            datasets: [{
+                label: 'Ventas ($)',
+                data: data.totales,
+                borderWidth: 2,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

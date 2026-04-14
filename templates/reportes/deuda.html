@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Clientes con Deuda</h2>
+
+<table class="table table-striped">
+<tr>
+    <th>Cliente</th>
+    <th>Deuda</th>
+</tr>
+
+{% for d in data %}
+<tr>
+    <td>{{ d[0] }}</td>
+    <td>${{ d[1] }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}
